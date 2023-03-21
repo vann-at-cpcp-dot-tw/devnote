@@ -146,7 +146,7 @@ const config = {
       // Public API key: it is safe to commit it
       apiKey: process.env.ALGOLIA_API_KEY,
 
-      indexName: 'docsearch',
+      indexName: 'devnote_docsearch',
 
       // Optional: see doc section below
       contextualSearch: true,
