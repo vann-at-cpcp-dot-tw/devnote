@@ -1,0 +1,43 @@
+---
+sidebar_position: 2
+title: 2. 使用 Operators 操作來源 Observable 物件
+---
+
+# 使用 Operators 操作來源 Observable 物件
+前面所使用的建立 Observable，也是 Operators 的一種，但是是被分類為「建立類型」的 Observable。 當我們要針對來源 Observable 物件進行轉換時，則會使用「建立類型」以外的 Operators，建立類型以外的 Operators 都會放在 'rxjs/operators' 內
+
+在「組合」這個步驟，我就是要利用這些建立類型以外的 Operators，將來源 Observable 物件轉換成不同的 Observable 物件，以解決各種實際開發遇到的複雜邏輯。
+
+在建立好的 Observable 物件中，都會有一個 pipe 方法，來協助我們將所有需要的 Operators 組合在一起，例如有個需求如下：
+> 當按下 Ctrl 鍵，且在網頁上點擊滑鼠左鍵時，將滑鼠目前的座標記錄下來
+
+<br/>我們可以：
+
+1. 使用 filter operator 判斷事件內容是否有按下 Ctrl 鍵
+2. 使用 map operator 將事件內容的座標取出，轉換成座標物件
+
+```jsx
+import { fromEvent } from 'rxjs'
+import { filter, map } from 'rxjs/operators'
+const source$ = fromEvent(document, 'click').pipe(
+  filter((e: MouseEvent)=> {
+    return e.ctrlKey
+  }),
+  map((e: MouseEvent)=>{
+    return {
+      x: e.x,
+      y: e.y
+    }
+  })
+)
+```
+
+這個 pipe 方法可以幫助我們把 Operators 給「接起來」，就像「管線」一樣，每個 Operator 就是一種類型的水管，透過 pipe 把所有水管組成一條新的線路，再把資料傳遞進去，完成一條我們預期的資料流程。<br/>
+
+關於 Operator 還有一些重要觀念：
++ 每個 Operator 的輸入就是來源 Observable 物件
++ 每個 Operator 的輸出都是另一個 Observable 物件
++ 上述兩點可以單純想像成：每個 Operator 的輸出就是下一個 Operator 的輸入
++ 組合完畢後，我們最後會拿到一個全新的 Observable 物件
+
+

@@ -1,0 +1,6 @@
+{
+  "link": {
+    "type": "generated-index",
+    "description": "RxJS 是 ReactiveX（又稱 Reactive Extensions，簡稱 Rx）這個概念透過 JavaScript 實作的類別庫，而 ReactiveX 本身則是透過組合一些常用的程式開發技巧，用來處理「非同步」及「串流事件」這類情境在開發時，容易導致程式碼與專案架構變的很複雜的問題，讓寫出來的程式碼更好理解與維護。"
+  }
+}

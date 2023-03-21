@@ -1,0 +1,113 @@
+---
+sidebar_position: 4
+title: 4. 隨堂練習 - 計數器
+---
+
+import Counter from './Counter.tsx'
+
+# 隨堂練習 - 計數器
+> 條件要求：<br/>
++ 畫面必須顯示三個資訊：
+  + 目前狀態：包含「開始計數」、「完成」和「錯誤」（包含錯誤訊息）
+  + 目前計數：當計數器建立後，顯示「計數」按鈕被電擊的次數
+  + 偶數計數：每當「目前計數」數值為偶數時，顯示這個偶數值
++ 畫面包含四個按鈕，功能如下：
+  + 「開始新的計數器」按鈕：重新建立一個新的計數器，並在「目前狀態」資訊顯示「開始計數」
+  + 「計數」按鈕：當建立新的計數器後，每按下計數按鈕，顯示的計數值就加 1
+  + 「發生錯誤」按鈕：要求使用者輸入錯誤訊息，並將錯誤訊息顯示在「目前狀態」資訊內
+  + 「完成計數」按鈕：在「目前狀態」資訊顯示「完成」
++ 其他要求：
+  + 當按下「開始新的計數器」時，所有計數器歸 0
+  + 當按下「發生錯誤」或「完成計數」時，除非按下「開始新的計數器」，否則其他按鈕按下都不會有任何動作
+
+## 實作
+```html title="HTML"
+<div className="bg-white text-black py-6">
+  <div className="flex container py-4">
+    <button className="mx-2 border border-black p-1" id="btn-new">開始新的計數器</button>
+    <button className="mx-2 border border-black p-1" id="btn-count">計數</button>
+    <button className="mx-2 border border-black p-1" id="btn-error">發生錯誤</button>
+    <button className="mx-2 border border-black p-1" id="btn-complete">完成計數</button>
+  </div>
+  <div className="container">
+    <hr />
+    <div>目前狀態：<span id="show-status"></span></div>
+    <div>目前計數：<span id="show-count"></span></div>
+    <div>偶數計數：<span id="show-even"></span></div>
+  </div>
+</div>
+```
+
+```ts title="TypeScript"
+import { filter, Subject, fromEvent } from "rxjs"
+
+let count:number | null = null
+let counter$: Subject<number>
+const buttonStart = window.document.querySelector("#btn-new") as HTMLButtonElement
+const buttonCount = window.document.querySelector("#btn-count") as HTMLButtonElement
+const buttonError = document.querySelector("#btn-error") as HTMLButtonElement
+const buttonComplete = document.querySelector("#btn-complete") as HTMLButtonElement
+const fieldStatus = document.querySelector("#show-status") as HTMLElement
+const fieldCount = document.querySelector("#show-count") as HTMLElement
+const fieldEven = document.querySelector("#show-even") as HTMLElement
+
+fromEvent(buttonStart, "click").subscribe((e) => {
+  counter$ = new Subject()
+  count = 0
+
+  // 訂閱 counter$ 並顯示目前計數值
+  counter$.subscribe({
+    next: (data) => {
+      fieldStatus.innerHTML = "開始計數！"
+      fieldCount.innerHTML = `${data}`
+    },
+    error: (msg) => {
+      fieldStatus.innerHTML = `錯誤（${msg}）`
+    },
+    complete: () => {
+      fieldStatus.innerHTML = `已完成。`
+    }
+  })
+
+  // 訂閱偶數事件
+  counter$.pipe(filter((data) => data % 2 === 0)).subscribe((data) => {
+    fieldEven.innerHTML = `${data}`
+  })
+
+  counter$.next(count)
+})
+
+// 「計數」按鈕事件訂閱
+fromEvent(buttonCount, "click").subscribe(() => {
+  if (count === null || counter$.isStopped) {
+    return
+  }
+
+  count++
+  counter$.next(count)
+})
+
+// 「錯誤」按鈕事件訂閱
+fromEvent(buttonError, "click").subscribe(() => {
+  if (count === null || counter$.isStopped) {
+    return
+  }
+
+  const msg = window.prompt("What's wrong?") || "error"
+  counter$.error(msg)
+})
+
+// 「完成」按鈕事件訂閱
+fromEvent(buttonComplete, "click").subscribe(() => {
+  if (count === null || counter$.isStopped) {
+    return
+  }
+
+  counter$.complete()
+})
+```
+
+## 完成
+<Counter />
+
+

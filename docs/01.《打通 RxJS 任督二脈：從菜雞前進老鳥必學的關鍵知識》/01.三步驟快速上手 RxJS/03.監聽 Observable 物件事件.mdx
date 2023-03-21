@@ -1,0 +1,68 @@
+---
+sidebar_position: 3
+title: 3. 監聽 Observable 物件事件
+---
+
+# 監聽 Observable 物件事件
+我們會使用 Observable 物件的 subscribe 方法來「訂閱」Observable 物件所提供的資訊，並針對提供的資訊撰寫程式處理，這些程式我們稱為 **「觀察者」（Observer）**。
+
+```jsx title="建立一個觀察者（Observer）物件"
+const observer = {
+  next: (data)=>{
+    console.log(data)
+  },
+  error: (err)=>{
+    console.log(err)
+  },
+  complete: ()=>{
+    console.log('complete')
+  }
+}
+```
+
+接著，我們只需要將這個觀察者（Observer）傳入 subscribe 方法就可以了
+```jsx
+const source$ = new Subject()
+source$.subscribe(observer)
+```
+
+上述這是最完整的寫法，也就是針對 next、error 和 complete 各自撰寫處理方式，但許多時候我們只會針對 next 做處理。 此時可以直接傳入一個 callback function 當作 observer 就好，當 subscribe 方法發現傳進來的「一個函式」時，他會將這個函式等同 next 處理：
+```jsx title="以下兩種寫法完全等價"
+// 寫法 1：只處理 next
+source$.subscribe({
+  next: (data)=>{
+    console.log(data)
+  }
+})
+
+// 寫法 2：直接傳入一個函式當作參數
+source$.subscribe((data)=>{
+  console.log(data)
+})
+```
+
+當 subscribe 方法呼叫後，我們會拿到一個「訂閱物件」，又稱為 **subscription**，這個 subscription 物件控制著目前的訂閱狀態，當我們不想繼續訂閱時，可以呼叫 unsubscribe 方法來「取消訂閱」，之後就算有新的事件（如：Observable 呼叫了 next 方法）發生，事件資訊也不會再傳入原來訂閱的方法內，另外需注意，當發生「error」或「complete」時，也會自動「unsubscribe」
+
+subscription 物件還有一個 closed 屬性，可以用來判斷是否已取消訂閱、發生錯誤或完成：
+```jsx
+import { Subject, Subscription } from 'rxjs'
+const source$ = new Subject()
+const subscription: Subscription = source$.subscribe((data)=>{
+  console.log(data)
+})
+
+// Observable 物件發生事件 1，log 印出：1
+source.next(1)
+
+// Observable 物件發生事件 1，log 印出：2
+source.next(1)
+
+// 取消訂閱
+subscription.unsubscribe()
+
+// 因為已經取消訂閱，所以不會再印出內容
+source.next(3)
+
+// 印出是否已經取消訂閱了
+console.log(subscription.closed)
+```

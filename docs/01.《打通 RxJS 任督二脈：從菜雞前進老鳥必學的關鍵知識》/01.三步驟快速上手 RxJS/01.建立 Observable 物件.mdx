@@ -1,0 +1,49 @@
+---
+sidebar_position: 1
+title: 1. 建立 Observable 物件
+---
+
+# 建立 Observable 物件
+
+## 兩種方式建立 Observable 物件
+1. 從頭開始建立 Observable 物件
+2. 將現有資料來源或事件直接轉換成 Observable 物件
+
+RxJS 依循 JavaScript 定義的模組化管理，大多數建立 Observable 的 API 都在 RxJS 模組內，例如要使用 fromEvent 這個 API 將某個事件轉換成 Observable 物件，可以透過下列語法來加入此 API 到程式內： import { fromEvent } from 'rxjs'
+
+要從頭建立新的 Observable 物件，最簡單的方式是使用 Subject<br/>
+> Tips: Subject 中文可翻譯為「目標」，從意義上也不難聯想成「目標是一個可以被觀察的物件」
+
+```jsx
+import { Subject, fromEvent } from "rxjs"
+
+const source$ = new Subject()
+source$.next("Hello World")
+
+// 錯誤處理（格式不限，可以是字串、數字或物件..等）
+source$.error("Not Login")
+// source$.error({
+//   code: 403,
+//   message: 'Not Login'
+// })
+
+// 想要結束整個 Observable 不再發送新事件，則可以用 complete 方法
+source$.complete()
+```
+
+<br/>
+
+因從頭建立 Observable 較為麻煩，所以 RxJS 提供了許多方式來將現有的資料或事件作為來源，包裝成新的 Observable 物件
+```jsx title="以 click 事件為例，如果是從頭自建："
+const source$ = new Subject()
+document.addEventListener("click", (e) => {
+  source$.next(e)
+})
+```
+
+<br/>
+
+
+```jsx title="透過 RxJS 提供 fromEvent 來建立 Observable："
+const source$ = fromEvent(document, "click")
+```
