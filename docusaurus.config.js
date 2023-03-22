@@ -157,14 +157,14 @@ const config = {
     algolia: {
       // The application ID provided by Algolia
       // appId: process.env.ALGOLIA_APP_ID,
-      appId: '9XD6Q44CMT',
+      appId: 'CKTMSFJ9FH',
 
       // Public API key: it is safe to commit it
       // apiKey: process.env.ALGOLIA_API_KEY,
-      apiKey: 'accf998caacd7c90eb28a9cd13e0f6e1',
+      apiKey: '04e2ab9ead831a54ac11f3246f5bab8e',
 
       // indexName: process.env.ALGOLIA_INDEX_NAME,
-      indexName: 'prod_devnote',
+      indexName: 'devcpcp',
 
       // Optional: see doc section below
       contextualSearch: true,

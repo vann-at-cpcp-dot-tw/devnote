@@ -1,6 +1,7 @@
 docsearch({
-  apiKey: 'accf998caacd7c90eb28a9cd13e0f6e1',
-  indexName: 'prod_devnote',
-  inputSelector: '### REPLACE ME ###',
-  debug: false // Set debug to true if you want to inspect the dropdown
+  appId: 'CKTMSFJ9FH',
+  apiKey: '04e2ab9ead831a54ac11f3246f5bab8e',
+  indexName: 'devcpcp',
+  container: '### REPLACE ME WITH A CONTAINER (e.g. div) ###',
+  debug: false // Set debug to true if you want to inspect the modal
 })
