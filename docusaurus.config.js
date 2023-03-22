@@ -69,6 +69,21 @@ const config = {
       }),
     ],
   ],
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/@docsearch/css@3',
+    },
+  ],
+  scripts: [
+    {
+      src: 'https://cdn.jsdelivr.net/npm/@docsearch/js@3',
+      async: false,
+    },
+    {
+      src: '/onMounted.js',
+      async: false,
+    },
+  ],
   themeConfig: /** @type {import('@docusaurus/preset-classic').ThemeConfig} */ {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -146,7 +161,7 @@ const config = {
       // Public API key: it is safe to commit it
       apiKey: process.env.ALGOLIA_API_KEY,
 
-      indexName: process.env.indexName,
+      indexName: process.env.ALGOLIA_INDEX_NAME,
 
       // Optional: see doc section below
       contextualSearch: true,
